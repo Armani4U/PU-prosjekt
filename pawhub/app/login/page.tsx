@@ -121,7 +121,7 @@ export default function LoginPage() {
 
   return (
     <main className={"relative min-h-screen flex items-center justify-center overflow-hidden" + (isDark ? " bg-zinc-900" : "bg-white")}>
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 pointer-events-auto">
         <Spline
           scene="https://prod.spline.design/4gYNTwbPcYYn0v4y/scene.splinecode"
           style={{ width: "100%", height: "100%" }}
@@ -129,15 +129,15 @@ export default function LoginPage() {
       </div>
 
       {/* Optional: light tint to keep the form readable */}
-      <div className={"absolute inset-0 z-[1] pointer-events-none" + (isDark ? " bg-black/50" : "bg-white/50")} />
+      <div className={"absolute inset-0 z-[1] pointer-events-none" + (isDark ? " bg-black/50" : " bg-white/25")} />
 
-      <div className="relative z-10 flex flex-col items-center translate-x-12 md:translate-x-24">
+      <div className="relative z-10 flex flex-col items-center translate-x-12 md:translate-x-24 pointer-events-none">
         <img
           src="/pawhub-logo-trans.png"
           alt="PawHub Logo"
           className="mb-6 w-56 md:w-64 lg:w-72 select-none pointer-events-none drop-shadow"
         />
-        <div className={"-mt-20 w-full max-w-sm backdrop-blur rounded-lg shadow-md p-6 " + (isDark ? "bg-zinc-950/95 text-zinc-100" : "bg-white/90 text-gray-900")}>
+        <div className={"-mt-20 w-full max-w-sm backdrop-blur rounded-lg shadow-md p-6 pointer-events-auto " + (isDark ? "bg-zinc-950/95 text-zinc-100" : "bg-white/90 text-gray-900")}>
           <h1 className="text-2xl font-semibold text-center mb-6">Login</h1>
 
             <form className="space-y-4" onSubmit={(e) => {e.preventDefault(); signIn();}}>  
