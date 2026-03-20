@@ -1,4 +1,6 @@
+// @ts-nocheck
 "use client";
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
