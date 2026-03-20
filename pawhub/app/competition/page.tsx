@@ -1,8 +1,8 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { Suspense, useEffect, useMemo, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -149,9 +149,14 @@ function getPreferredTheme(): boolean {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 function CompetitionPageContent() {
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const eventId = searchParams.get("id") ?? undefined;
+  const [eventId, setEventId] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const id = new URLSearchParams(window.location.search).get("id") ?? undefined;
+    setEventId(id);
+  }, []);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -1097,10 +1102,4 @@ function CompetitionPageContent() {
   );
 }
 
-export default function CompetitionPage() {
-  return (
-    <Suspense fallback={<div className="min-h-screen bg-[#FFF7ED] text-gray-900"><div className="mx-auto max-w-5xl p-6"><p className="text-sm text-gray-600">Loading event…</p></div></div>}>
-      <CompetitionPageContent />
-    </Suspense>
-  );
-}
+export default CompetitionPageContent;
