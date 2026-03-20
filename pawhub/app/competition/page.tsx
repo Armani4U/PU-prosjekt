@@ -197,8 +197,9 @@ function CompetitionPageContent() {
   );
 
   // tick every 30s so isActiveWindow stays fresh without a full reload
-  const [now, setNow] = useState(() => Date.now());
+  const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
+    setNow(Date.now());
     const id = setInterval(() => setNow(Date.now()), 30_000);
     return () => clearInterval(id);
   }, []);
@@ -208,14 +209,14 @@ function CompetitionPageContent() {
     const cap = event?.capacity ?? 0;
     const s = event?.starts_at ? new Date(event.starts_at).getTime() : null;
     const e = event?.ends_at ? new Date(event.ends_at).getTime() : null;
-    const afterEnd = e !== null && now > e;
-    const beforeStart = s !== null && now < s;
+    const afterEnd = now !== null && e !== null && now > e;
+    const beforeStart = now !== null && s !== null && now < s;
     return {
       spotsTaken: taken,
       spotsLeft: Math.max(cap - taken, 0),
       isFull: cap > 0 && taken >= cap,
       effectiveStatus: afterEnd ? ("ended" as const) : beforeStart ? ("upcoming" as const) : ("active" as const),
-      isActiveWindow: s !== null && e !== null && now >= s && now <= e,
+      isActiveWindow: now !== null && s !== null && e !== null && now >= s && now <= e,
     };
   }, [registeredUsers, event, now]);
 
