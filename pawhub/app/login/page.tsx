@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import dynamic from "next/dynamic";
@@ -16,9 +16,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const rawNext = searchParams.get("next") ?? "/";
-  const next = rawNext.startsWith("/") ? rawNext : "/";
+  const [nextPath, setNextPath] = useState("/");
 
   useEffect(() => {
     try {
@@ -27,11 +25,13 @@ export default function LoginPage() {
       const next = saved ? saved === "dark" : systemDark;
       setIsDark(next);
       document.documentElement.classList.toggle("dark", next);
+      const rawNext = new URLSearchParams(window.location.search).get("next") ?? "/";
+      setNextPath(rawNext.startsWith("/") ? rawNext : "/");
   } catch {}
 }, []);
 
   const continueAsGuest = () => {
-    router.replace(next);
+    router.replace(nextPath);
   };
 
   const signIn = async () => {
@@ -73,7 +73,7 @@ export default function LoginPage() {
       setMessage(
         `Signed in${data.user?.email ? ` as ${data.user.email}` : ""}.`
       )
-      router.replace(next);
+      router.replace(nextPath);
     } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
@@ -111,7 +111,7 @@ export default function LoginPage() {
           : "Account created. Check your email to confirm before signing in."
 
       )
-      if (data.session) router.replace(next);
+      if (data.session) router.replace(nextPath);
     } catch {
       setError("An unexpected error occurred. Please try again.");
     } finally {
